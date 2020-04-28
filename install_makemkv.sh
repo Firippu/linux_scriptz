@@ -1,10 +1,24 @@
 #!/bin/bash
 
+#
+#	description;
+#		seamlessly automates the installation for MakeMKV from www.makemkv.com
+#
+#	maintenance; 
+#		check for version updates at www.makemkv.com & replace the version variable accordingly
+#
+#	usage;
+#		sudo ./install_makemkv.sh
+#
+#	notes; tested on ubuntu 19.10, 20.04; should work on most debian based distros
+#
+
 if [ "$EUID" -ne 0 ]; then
 	echo "Please run as root"
 	exit
 fi
 
+## package requirements based from official installation page
 apt-get install -y build-essential pkg-config libc6-dev libssl-dev libexpat1-dev libavcodec-dev libgl1-mesa-dev qtbase5-dev zlib1g-dev
 
 version="1.15.1"
@@ -26,6 +40,7 @@ cd $dir/makemkv-oss-$version/
 make
 make install
 
+## skips eula confirmation
 sed '2iexit 0' $dir/makemkv-bin-$version/src/ask_eula.sh > $dir/makemkv-bin-$version/src/ask_eula.sh
 
 cd $dir/makemkv-bin-$version/
